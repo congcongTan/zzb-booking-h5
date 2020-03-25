@@ -66,8 +66,11 @@
 						<div class="weui-cell">
 							<div class="weui-cell__hd">预约类型</div>
 							<div class="weui-cell__bd">
+
 								<label><input type="radio" name="预约类型" value="1" v-model="a.action"> 访客拜访</label>
-								<label><input type="radio" name="预约类型" value="2" v-model="a.action"> 我要入住</label>
+
+								<label v-if="softwareVersion != 60001"><input type="radio" name="预约类型" value="2" v-model="a.action"> 我要入住</label>
+
 							</div>
 						</div>
 
@@ -227,6 +230,8 @@ var app = new Vue({
 			liveImg: '',
 			liveImgCode: '',//仅预览用
 		},
+
+		softwareVersion: 0,
 
 		预约类型:{
 			1:'访客拜访',
@@ -402,14 +407,13 @@ var app = new Vue({
 					if(re.rspHead.retCode == '1'){
 
 						_this.page = 2
-						
+
 					}else{
 
 						_this.toast({message:re.rspHead.retMsg})
 
 					}
 
-					
 				}
 			})
 
@@ -505,6 +509,7 @@ var app = new Vue({
 			success: function(re){
 				if(re.rspHead.retCode == '1'){
 					LS.identifier = re.rspBody.identifier
+					_this.softwareVersion = re.rspBody.softwareVersion
 				}else{
 					_this.toast({message:re.rspHead.retMsg,close:'wx'})
 				}
