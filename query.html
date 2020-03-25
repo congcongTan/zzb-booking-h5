@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.9, user-scalable=no">
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<title>在线预约系统</title>
+
+<link rel="stylesheet" href="css/all.css">
+<script src="js/all.js"></script>
+
+<style>
+.weui-label {
+	width: auto;
+}
+.img-placeholder{
+	margin-left: 25px;
+	color: #ccc;
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+	<div class="debug" style="display: none;">
+		debug:<br>
+	</div>
+
+	<div class="weui-navbar">
+		<div class="weui-navbar__item" onclick="location.href = 'index.html'">
+			在线预约
+		</div>
+		<div class="weui-navbar__item weui-bar__item_on" onclick="location.href = 'query.html'">
+			预约查询
+		</div>
+	</div>
+
+
+	<div v-if="page == 0">
+		loading ...
+	</div>
+
+
+	<div v-if="page == 1">
+
+		<img src="img/bg.jpg" width="100%">
+
+		<form style="margin-top: -25px">
+
+			<div style="padding-left: 60px">
+				<ul>
+					<li>为保证隐私，请输入准确信息查询</li>
+				</ul>
+			</div>
+			<div class="weui-form__control-area">
+				<div class="weui-cells__group weui-cells__group_form">
+					<div class="weui-cells weui-cells_form">
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">预约类型</div>
+							<div class="weui-cell__bd">
+								<label><input type="radio" name="预约类型" value="访客拜访" v-model="a.预约类型"> 访客拜访</label>
+								<label><input type="radio" name="预约类型" value="我要入住" v-model="a.预约类型"> 我要入住</label>
+							</div>
+						</div>
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">真实姓名</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" placeholder="请输入真实姓名"
+								name="realName" v-model="a.realName">
+							</div>
+						</div>
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">身份证号</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" placeholder="请输入18位证件号码"
+								name="identityCard" v-model="a.identityCard">
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="weui-form__opr-area">
+				<a :class="`weui-btn weui-btn_${
+				a.realName != '' &&
+				a.identityCard != '' ?
+				'primary':'disabled'}`"
+				href="javascript:;" @click="提交()"
+				>查询信息</a>
+			</div>
+		</form>
+
+	</div>
+
+
+	<div v-if="page == 2">
+
+		<h3 class="tc" style="margin: 30px 0 20px;">预约成功</h3>
+
+		<div style="margin: 0 20px 30px; padding: 20px 0; border-top:1px solid #CCC;border-bottom:1px solid #CCC;">
+
+			预约类型：{{a.预约类型}}<br>
+			真实姓名：{{a.realName}}<br>
+			身份证号：{{a.identityCard}}<br>
+			预抵日期：{{a.预抵日期}}<br>
+			预离日期：{{a.预离日期}}<br>
+
+		</div>
+
+		<div class="weui-form__opr-area">
+			<a class="weui-btn weui-btn_primary" href="javascript:;">关闭页面</a>
+		</div>
+
+	</div>
+
+	<div class="weui-form__extra-area">
+		<div class="weui-footer">
+			<p class="weui-footer__text">中证宝提供技术支持</p>
+		</div>
+	</div>
+
+
+	<div v-if="loading == 1">
+		<div class="weui-mask_transparent"></div>
+		<div class="weui-toast">
+			<i class="weui-loading weui-icon_toast"></i>
+			<p class="weui-toast__content">数据加载中</p>
+		</div>
+	</div>
+
+	<div class="js_dialog" v-if="alert != ''">
+		<div class="weui-mask"></div>
+		<div class="weui-dialog">
+			<div class="weui-dialog__hd"><strong class="weui-dialog__title">{{alert.title ? alert.title:'提示'}}</strong></div>
+			<div class="weui-dialog__bd">{{alert.message}}</div>
+			<div class="weui-dialog__ft">
+
+				<template v-if="alert.close != 'no'">
+					<a class="weui-dialog__btn weui-dialog__btn_default"
+					href="javascript:;"
+					v-if="alert.close == 'wx'"
+					@click="wx_close()">关闭</a>
+
+					<a class="weui-dialog__btn weui-dialog__btn_default"
+					href="javascript:;"
+					v-if="alert.close == undefined"
+					@click="alert = ''">关闭</a>
+
+				</template>
+
+				<a class="weui-dialog__btn weui-dialog__btn_primary"
+				:href="`${alert.ok_url}`"
+				v-if="alert.ok_url != undefined">{{alert.ok_title ? alert.ok_title:'确定'}}</a>
+
+			</div>
+		</div>
+	</div>
+
+</div><!--app-->
+
+
+<script src="js/exif.min.js"></script>
+<script>
+var app = new Vue({
+	el: '#app',
+	data:{
+		page: 0,
+		loading: 1,
+		alert: '',
+
+		page: 0,
+		积分: LS.积分,
+		充值积分: 0,
+		扣除积分: 0,
+		本次收费: 1,
+		ok: '',
+
+		a: {
+			realName: '',
+			identityCard: '',
+			liveImg: '',
+			liveImgCode: '',//仅预览用
+		}
+	},
+	methods:{
+		toast: function(json){
+			this.alert = json
+		},
+		toast_close: function(){
+			this.alert = ''
+		},
+		wx_close: function(){
+			WeixinJSBridge.invoke('closeWindow',{},function(res){})
+		},
+		debug: function(log){
+			$('.debug').html( $('.debug').html() + log + '<br>' )
+		},
+
+		debug: function(log){
+
+			$('.debug').html( $('.debug').html() + log + '<br>' )
+		},
+		提交: function(){
+			var _this = this
+
+			if( this.a.realName == ''
+				|| this.a.identityCard == ''
+				|| this.a.liveImg == '' ){
+				return
+			}
+
+			//不够分需要充值
+			var 还剩积分 = ((LS.积分 * 100) - (LS.扣除积分 * 100)) / 100
+			if( this.本次收费 === 1 && 还剩积分 < 0 ){
+
+				this.充值积分 = - 还剩积分
+
+				if(confirm('需要付费' + this.充值积分 + '元')){
+
+					var data = {
+	"reqHead":{
+		"clientType":"1",
+		"appVersion":"1.0",
+		"osVersion":"安卓4.2.1",
+		"imei":"设备号",
+		"mobileModel":"S1",
+		"mobileManufacturer":"小米",
+		"identificationCode":"1212312",
+		"lat":"1",
+		"lng":"1",
+		"format":"json",
+		"version":"1.0",
+		"sign":"UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+	},
+	"reqBody":{
+		"memberId": LS.memberId,
+		"amount": this.充值积分,
+		"openId": LS.openId
+	}
+}
+
+					$.ajax({
+						type: 'POST',
+						url: api + 'zzb/app/h5WechatPurchase/interface',
+						data: JSON.stringify(data),
+						dataType: 'json',
+						success: function(re){
+
+							// _this.debug('正在发起微信支付')
+
+							if(re.rspHead.retCode == '1'){
+								_this.微信支付(re.rspBody.payData)
+							}else{
+								_this.toast({message:re.rspHead.retMsg})
+							}
+						}
+					})
+
+				}
+
+			}else{
+
+				//够积分
+				// console.log('积分够啦')
+
+				this.loading = 1
+
+				var data = {
+	"reqHead":{
+		"clientType":"1",
+		"appVersion":"1.0",
+		"osVersion":"安卓4.2.1",
+		"imei":"设备号",
+		"mobileModel":"S1",
+		"mobileManufacturer":"小米",
+		"identificationCode":"1212312",
+		"lat":"1",
+		"lng":"1",
+		"format":"json",
+		"version":"1.0",
+		"sign":"AF589D24291C386A925DF1430AFB38B7"
+	},
+	"reqBody":{
+		"identifier": LS.商户编号,
+		"memberId": LS.memberId,
+		"realName": this.a.realName,
+		"identityCard": this.a.identityCard,
+		"liveImg": this.a.liveImg
+	}
+}
+
+				$.ajax({
+					type: 'POST',
+					url: api + 'zzb/app/h5FaceRecognition/interface',
+					data: JSON.stringify(data),
+					dataType: 'json',
+					success: function(re){
+
+						_this.loading = 0
+
+						if(re.rspHead.retCode == '1'){
+							_this.ok = 'pass'
+							
+						}else{
+							_this.ok = 'error'
+
+						}
+
+						_this.page = 2
+					}
+				})
+			}
+
+		},
+		微信支付(json){
+			var _this = this
+
+			_this.debug('微信支付的json是：' + JSON.stringify(json))
+
+			// this.单号 = json.orderNo
+
+			WeixinJSBridge.invoke(
+				'getBrandWCPayRequest',
+				{
+					"appId":		json.appid,
+					"timeStamp":	json.timestamp,
+					"nonceStr":		json.noncestr,
+					"package":		json.package,
+					"signType":		json.signType,
+					"paySign":		json.sign
+				},
+				function(re){
+
+					_this.debug('微信支付返回：' + JSON.stringify(re))
+
+					if(re.err_msg == "get_brand_wcpay_request:ok"){
+
+						// _this.debug('微信支付成功了！')
+
+						// _this.debug('检查支付状态循环：' + "_this.检查支付状态('" + json.orderNo + "')")
+
+						// _this.debug(JSON.stringify(json))
+
+						_this.loading = 1
+
+						_this.检查支付状态次数 = 30
+
+						_this.检查支付状态循环 = setInterval(function(){
+							_this.检查支付状态(json.orderNo)
+						}, 1000)
+						
+
+					}else{
+
+						this.loading = 0
+					}
+				}
+			)
+		},
+		检查支付状态: function(单号){
+			var _this = this
+
+			this.debug('检查支付状态：' + 单号 + ' 第' + this.检查支付状态次数 + '次')
+
+			//停止检查 - 次数够
+			if(this.检查支付状态次数 == 0){
+				
+				clearInterval(this.检查支付状态循环)
+				this.loading = 0
+
+				return
+			}
+
+			this.检查支付状态次数--
+
+			var data = {
+	"reqHead":{
+		"clientType":"1",
+		"appVersion":"1.0",
+		"osVersion":"安卓4.2.1",
+		"imei":"设备号",
+		"mobileModel":"S1",
+		"mobileManufacturer":"小米",
+		"identificationCode":"1212312",
+		"lat":"1",
+		"lng":"1",
+		"format":"json",
+		"version":"1.0",
+		"sign":"UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+	},
+	"reqBody":{
+		"orderNo": 单号
+	}
+}
+
+			$.ajax({
+				type: 'POST',
+				url: api + 'zzb/app/payResult/interface',
+				data: JSON.stringify(data),
+				dataType: 'json',
+				success: function(re){
+
+					// console.log(re)
+					_this.debug('payResult返回：' + re.rspBody.resutl)
+
+					if(re.rspBody.resutl == '1'){
+
+						//停止检查
+						clearInterval(_this.检查支付状态循环)
+						_this.loading = 0
+
+						//更新本地积分
+						LS.积分 = LS.积分 + _this.充值积分
+
+						//再次发起购买
+						_this.检验()
+					}
+
+				}
+			})
+
+		},
+	},
+	mounted(){
+		var _this = this
+
+		console.log('vue is ready')
+
+
+		this.page = 1
+
+		this.loading = 0
+
+		// console.log(appid);
+
+		var ua = navigator.userAgent
+		// alert(ua)
+
+		if(ua.indexOf('MicroMessenger') != -1){
+			this.客户端 = '微信'
+		}
+		if(ua.indexOf('Alipay') != -1){
+			this.客户端 = '支付宝'
+		}
+
+		if(this.客户端 == ''){
+			this.toast({message:'请在中证宝APP、微信、支付宝扫码使用',close:'wx'})
+			return
+		}
+
+		if(this.客户端 == '支付宝'){
+			this.toast({message:'支付宝暂未开通',close:'wx'})
+			return
+		}
+
+		// return
+
+		var _this = this
+
+		//清缓存
+		if(getUrl('clean') != undefined){
+			LS.removeItem('memberId')
+			LS.removeItem('openId')
+			LS.removeItem('userId')
+			LS.removeItem('商户号')
+			LS.removeItem('商户编号')
+			LS.removeItem('扣除积分')
+			LS.removeItem('积分')
+			return
+		}
+
+		//未登录
+		if(LS.openId == undefined){
+
+			//step1 无code
+			if(getUrl('code') == undefined){
+				// console.log(location.href)
+				var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(location.href) + '&response_type=code&scope=snsapi_base#wechat_redirect'
+
+				// console.log(url)
+				// return
+
+				location.href = url
+				return
+			}
+
+		}
+
+
+		//用户信息
+		var body = {
+			source: 2,
+			paramId: '',
+			code: ''
+		}
+		if(LS.openId != undefined){
+
+			//有openid 用 openid
+			body.paramId = LS.openId
+
+		}else if(getUrl('code') != null){
+
+			//无openid 用 code
+			body.code = getUrl('code')
+		}
+
+		if( !(body.paramId == '' && body.code == '') ){
+
+			// alert(body.paramId + ' | ' + body.code)
+			
+			var data = {
+	"reqHead":{
+		"clientType":"1",
+		"appVersion":"1.0",
+		"osVersion":"安卓4.2.1",
+		"imei":"设备号",
+		"mobileModel":"S1",
+		"mobileManufacturer":"小米",
+		"identificationCode":"1212312",
+		"lat":"1",
+		"lng":"1",
+		"format":"json",
+		"version":"1.0",
+		"sign":"UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+	},
+	"reqBody": body
+}
+
+			$.ajax({
+				type: 'POST',
+				url: api + 'zzb/app/h5UserInfo/interface',
+				data: JSON.stringify(data),
+				dataType: 'json',
+				success: function(re){
+					if(re.rspHead.retCode == '1'){
+
+						LS.积分		= re.rspBody.integral
+						LS.openId	= re.rspBody.openId
+						LS.memberId	= re.rspBody.memberId
+						LS.userId	= re.rspBody.userId
+
+						//更新积分
+						_this.积分 = LS.积分
+
+						//上次失败这次免费
+						_this.本次收费 = re.rspBody.lastAuthStatus
+
+					}else{
+						_this.toast({message:re.rspHead.retMsg,close:'wx'})
+					}
+				}
+			})
+		}
+
+		// 商户信息
+		var data = {
+	"reqHead":{
+		"clientType":"1",
+		"appVersion":"1.0",
+		"osVersion":"安卓4.2.1",
+		"imei":"设备号",
+		"mobileModel":"S1",
+		"mobileManufacturer":"小米",
+		"identificationCode":"1212312",
+		"lat":"1",
+		"lng":"1",
+		"format":"json",
+		"version":"1.0",
+		"sign":"UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+	},
+	"reqBody": {
+		"mchId": LS.商户号
+	}
+}
+
+		$.ajax({
+			type: 'POST',
+			url: api + 'zzb/app/mchInfo/interface',
+			data: JSON.stringify(data),
+			dataType: 'json',
+			success: function(re){
+				if(re.rspHead.retCode == '1'){
+					LS.商户编号 = re.rspBody.identifier
+					LS.扣除积分 = re.rspBody.payIntegral
+					_this.扣除积分 = re.rspBody.payIntegral
+				}else{
+					_this.toast({message:re.rspHead.retMsg,close:'wx'})
+				}
+			}
+		})
+
+	}
+})
+</script>
+</body>
+</html>
