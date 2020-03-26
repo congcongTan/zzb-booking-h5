@@ -504,6 +504,12 @@ var app = new Vue({
 		// deviceSn
 		if(getUrl('hsdevice') != undefined){
 			LS.deviceSn = getUrl('hsdevice')
+
+			//机器乱加去除
+			if(LS.deviceSn.indexOf('?') != -1){
+				LS.deviceSn = LS.deviceSn.split('?')[0]
+			}
+
 		}else if(LS.deviceSn != undefined){
 
 		}else{
@@ -542,7 +548,7 @@ var app = new Vue({
 				if(re.rspHead.retCode == '1'){
 					LS.identifier = re.rspBody.identifier
 					_this.softwareVersion = re.rspBody.softwareVersion
-					$('title').html(re.rspBody.title + $('title').html())
+					$('title').html('[' + re.rspBody.title + ']' + $('title').html())
 				}else{
 					_this.toast({message:re.rspHead.retMsg,close:'wx'})
 				}
