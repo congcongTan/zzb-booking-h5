@@ -146,29 +146,61 @@
 
 	<div v-if="page == 2">
 
-		<h3 class="tc" style="margin: 30px 0 20px;">预约成功</h3>
-
-		<div style="margin: 0 20px 30px; padding: 20px 0; border-top:1px solid #CCC;border-bottom:1px solid #CCC;">
-
-			预约类型：{{预约类型[a.action]}}<br>
-			真实姓名：{{a.realName}}<br>
-			身份证号：{{a.identityCard}}<br>
-			预抵日期：{{a.visitTime}}<br>
-			预离日期：{{a.leaveTime}}<br>
+		<div class="weui-msg">
+			<div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+			<div class="weui-msg__text-area">
+				<h2 class="weui-msg__title">预约成功</h2>
+			</div>
 
 		</div>
 
-		<div class="weui-form__opr-area">
-			<a class="weui-btn weui-btn_primary" @click="wx_close()">关闭页面</a>
+		<div class="weui-cells__group weui-cells__group_form">
+			<div class="weui-cells weui-cells_form">
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">预约类型</div>
+					<div class="weui-cell__bd">{{预约类型[a.action]}}</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">真实姓名</div>
+					<div class="weui-cell__bd">{{a.realName}}</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">身份证号</div>
+					<div class="weui-cell__bd">{{a.identityCard}}</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">预抵日期</div>
+					<div class="weui-cell__bd">{{a.visitTime}}</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">预离日期</div>
+					<div class="weui-cell__bd">{{a.leaveTime}}</div>
+				</div>
+
+			</div>
+		</div>
+
+		<br><br><br>
+
+		<div class="weui-msg__opr-area">
+			<p class="weui-btn-area">
+				<a class="weui-btn weui-btn_primary" @click="wx_close()">关闭页面</a>
+			</p>
+		</div>
+
+		<div class="weui-form__extra-area">
+			<div class="weui-footer">
+				<p class="weui-footer__text">中证宝提供技术支持</p>
+			</div>
 		</div>
 
 	</div>
 
-	<div class="weui-form__extra-area">
-		<div class="weui-footer">
-			<p class="weui-footer__text">中证宝提供技术支持</p>
-		</div>
-	</div>
 
 
 	<div v-if="loading == 1">
@@ -510,6 +542,7 @@ var app = new Vue({
 				if(re.rspHead.retCode == '1'){
 					LS.identifier = re.rspBody.identifier
 					_this.softwareVersion = re.rspBody.softwareVersion
+					$('title').html(re.rspBody.title + $('title').html())
 				}else{
 					_this.toast({message:re.rspHead.retMsg,close:'wx'})
 				}
