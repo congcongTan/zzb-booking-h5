@@ -78,7 +78,14 @@
 							<div class="weui-cell__hd">真实姓名</div>
 							<div class="weui-cell__bd">
 								<input class="weui-input" type="text" placeholder="请输入真实姓名"
-								name="realName" v-model="a.realName">
+								v-model="a.realName">
+							</div>
+						</div>
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">手机号码</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="number" v-model="a.mobile">
 							</div>
 						</div>
 
@@ -86,7 +93,7 @@
 							<div class="weui-cell__hd">身份证号</div>
 							<div class="weui-cell__bd">
 								<input class="weui-input" type="text" placeholder="请输入18位证件号码"
-								name="identityCard" v-model="a.identityCard">
+								v-model="a.identityCard">
 							</div>
 						</div>
 
@@ -94,13 +101,6 @@
 							<div class="weui-cell__hd">预抵日期</div>
 							<div class="weui-cell__bd">
 								<input class="weui-input" type="date" v-model="a.visitTime">
-							</div>
-						</div>
-
-						<div class="weui-cell">
-							<div class="weui-cell__hd">预离日期</div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" type="date" v-model="a.leaveTime">
 							</div>
 						</div>
 
@@ -130,7 +130,6 @@
 				a.realName != '' &&
 				a.identityCard != '' &&
 				a.visitTime != '' &&
-				a.leaveTime != '' &&
 				a.liveImg != '' ?
 				'primary':'disabled'}`"
 				id="提交按钮"
@@ -168,6 +167,11 @@
 				</div>
 
 				<div class="weui-cell">
+					<div class="weui-cell__hd">手机号码</div>
+					<div class="weui-cell__bd">{{a.mobile}}</div>
+				</div>
+
+				<div class="weui-cell">
 					<div class="weui-cell__hd">身份证号</div>
 					<div class="weui-cell__bd">{{a.identityCard}}</div>
 				</div>
@@ -175,11 +179,6 @@
 				<div class="weui-cell">
 					<div class="weui-cell__hd">预抵日期</div>
 					<div class="weui-cell__bd">{{a.visitTime}}</div>
-				</div>
-
-				<div class="weui-cell">
-					<div class="weui-cell__hd">预离日期</div>
-					<div class="weui-cell__bd">{{a.leaveTime}}</div>
 				</div>
 
 			</div>
@@ -418,6 +417,7 @@ var app = new Vue({
 		action: this.a.action,
 		identifier: LS.identifier,
 		realName: this.a.realName,
+		mobile: this.a.mobile,
 		identityCard: this.a.identityCard,
 		liveImg: this.a.liveImg,
 		deviceSn: LS.deviceSn,
