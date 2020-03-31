@@ -98,9 +98,30 @@
 						</div>
 
 						<div class="weui-cell">
-							<div class="weui-cell__hd">预抵日期</div>
+							<div class="weui-cell__hd">预约时间</div>
 							<div class="weui-cell__bd">
 								<input class="weui-input" type="date" v-model="a.visitTime">
+							</div>
+						</div>
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">拜访部门</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" v-model="a.departTitle">
+							</div>
+						</div>
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">拜访人员</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" v-model="a.beVisited">
+							</div>
+						</div>
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">拜访原因</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" v-model="a.cause">
 							</div>
 						</div>
 
@@ -177,8 +198,23 @@
 				</div>
 
 				<div class="weui-cell">
-					<div class="weui-cell__hd">预抵日期</div>
+					<div class="weui-cell__hd">预约时间</div>
 					<div class="weui-cell__bd">{{a.visitTime}}</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">拜访部门</div>
+					<div class="weui-cell__bd">{{a.departTitle}}</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">拜访人员</div>
+					<div class="weui-cell__bd">{{a.beVisited}}</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">拜访原因</div>
+					<div class="weui-cell__bd">{{a.cause}}</div>
 				</div>
 
 			</div>
