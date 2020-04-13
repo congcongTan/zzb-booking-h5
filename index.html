@@ -233,57 +233,66 @@
 					<div class="weui-cell__bd">{{a.identityCard}}</div>
 				</div>
 
-							<template v-if="examine == 1">
+				<template v-if="a.action == 1">
 
-								<div class="weui-cell" v-if="softwareVersion == 60001">
-									<div class="weui-cell__hd">拜访部门</div>
-									<div class="weui-cell__bd">
-										{{a.departTitle}}
-									</div>
-								</div>
+					<div class="weui-cell">
+						<div class="weui-cell__hd">预约时间</div>
+						<div class="weui-cell__bd">
+							{{a.visitTime}}
+						</div>
+					</div>
 
-								<div class="weui-cell" v-if="softwareVersion == 60002">
-									<div class="weui-cell__hd">拜访房间</div>
-									<div class="weui-cell__bd">
-										{{a.roomName}}
-									</div>
-								</div>
+					<template v-if="examine == 1">
 
-								<div class="weui-cell">
-									<div class="weui-cell__hd">拜访人员</div>
-									<div class="weui-cell__bd">
-										{{a.beVisited}}
-									</div>
-								</div>
-
-								<div class="weui-cell">
-									<div class="weui-cell__hd">拜访原因</div>
-									<div class="weui-cell__bd">
-										{{a.cause}}
-									</div>
-								</div>
-
-							</template>
-
-						</template>
-
-						<template v-if="a.action == 3">
-
-							<div class="weui-cell">
-								<div class="weui-cell__hd">入住时间</div>
-								<div class="weui-cell__bd">
-									{{a.bookingTime}}
-								</div>
+						<div class="weui-cell" v-if="a.departTitle != '' && softwareVersion == 60001">
+							<div class="weui-cell__hd">拜访部门</div>
+							<div class="weui-cell__bd">
+								{{a.departTitle}}
 							</div>
+						</div>
 
-							<div class="weui-cell">
-								<div class="weui-cell__hd">预离时间</div>
-								<div class="weui-cell__bd">
-									{{a.leaveTime}}
-								</div>
+						<div class="weui-cell" v-if="a.roomName != '' && softwareVersion == 60002">
+							<div class="weui-cell__hd">拜访房间</div>
+							<div class="weui-cell__bd">
+								{{a.roomName}}
 							</div>
+						</div>
 
-						</template>
+						<div class="weui-cell" v-if="a.beVisited != ''">
+							<div class="weui-cell__hd">拜访人员</div>
+							<div class="weui-cell__bd">
+								{{a.beVisited}}
+							</div>
+						</div>
+
+						<div class="weui-cell" v-if="a.cause != ''">
+							<div class="weui-cell__hd">拜访原因</div>
+							<div class="weui-cell__bd">
+								{{a.cause}}
+							</div>
+						</div>
+
+					</template>
+
+				</template>
+
+				<template v-if="a.action == 3">
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">入住时间</div>
+						<div class="weui-cell__bd">
+							{{a.bookingTime}}
+						</div>
+					</div>
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">预离时间</div>
+						<div class="weui-cell__bd">
+							{{a.leaveTime}}
+						</div>
+					</div>
+
+				</template>
 
 			</div>
 		</div>
@@ -371,7 +380,7 @@ var app = new Vue({
 
 		预约类型:{
 			1:'访客拜访',
-			2:'我要入住',
+			3:'我要入住',
 		},
 	},
 	methods:{
