@@ -183,8 +183,10 @@
 			<div class="weui-form__opr-area">
 				<a :class="`weui-btn weui-btn_${
 				a.realName != '' &&
-				a.identityCard != '' &&
-				(a.visitTime != '' || a.bookingTime != '') &&
+				a.identityCard != '' && (
+					(a.action == 1 && a.visitTime != '') ||
+					(a.action == 3 && a.bookingTime != '' && a.leaveTime != '' )
+				) &&
 				a.liveImg != '' ?
 				'primary':'disabled'}`"
 				id="提交按钮"
@@ -542,6 +544,7 @@ var app = new Vue({
 					deviceSn: LS.deviceSn,
 					mobile: this.a.mobile,
 					bookingTime: this.a.bookingTime,
+					leaveTime: this.a.leaveTime,
 					roomName: this.a.roomName,
 				}
 			}
