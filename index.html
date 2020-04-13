@@ -69,7 +69,7 @@
 
 								<label><input type="radio" name="预约类型" value="1" v-model="a.action"> 访客拜访</label>
 
-								<label v-if="softwareVersion != 60001"><input type="radio" name="预约类型" value="2" v-model="a.action"> 我要入住</label>
+								<label v-if="softwareVersion != 60001"><input type="radio" name="预约类型" value="3" v-model="a.action"> 我要入住</label>
 
 							</div>
 						</div>
@@ -97,33 +97,67 @@
 							</div>
 						</div>
 
-						<div class="weui-cell">
-							<div class="weui-cell__hd">预约时间</div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" type="date" v-model="a.visitTime">
-							</div>
-						</div>
+						<template v-if="a.action == 1">
 
-						<div class="weui-cell" v-if="examine != 2">
-							<div class="weui-cell__hd">拜访部门</div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" type="text" v-model="a.departTitle">
+							<div class="weui-cell">
+								<div class="weui-cell__hd">预约时间</div>
+								<div class="weui-cell__bd">
+									<input class="weui-input" type="date" v-model="a.visitTime">
+								</div>
 							</div>
-						</div>
 
-						<div class="weui-cell" v-if="examine != 2">
-							<div class="weui-cell__hd">拜访人员</div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" type="text" v-model="a.beVisited">
-							</div>
-						</div>
+							<template v-if="examine == 1">
 
-						<div class="weui-cell" v-if="examine != 2">
-							<div class="weui-cell__hd">拜访原因</div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" type="text" v-model="a.cause">
+								<div class="weui-cell" v-if="softwareVersion == 60001">
+									<div class="weui-cell__hd">拜访部门</div>
+									<div class="weui-cell__bd">
+										<input class="weui-input" type="text" v-model="a.departTitle">
+									</div>
+								</div>
+
+								<div class="weui-cell" v-if="softwareVersion == 60002">
+									<div class="weui-cell__hd">拜访房间</div>
+									<div class="weui-cell__bd">
+										<input class="weui-input" type="text" v-model="a.roomName">
+									</div>
+								</div>
+
+								<div class="weui-cell">
+									<div class="weui-cell__hd">拜访人员</div>
+									<div class="weui-cell__bd">
+										<input class="weui-input" type="text" v-model="a.beVisited">
+									</div>
+								</div>
+
+								<div class="weui-cell">
+									<div class="weui-cell__hd">拜访原因</div>
+									<div class="weui-cell__bd">
+										<input class="weui-input" type="text" v-model="a.cause">
+									</div>
+								</div>
+
+							</template>
+
+						</template>
+
+						<template v-if="a.action == 3">
+
+							<div class="weui-cell">
+								<div class="weui-cell__hd">入住时间</div>
+								<div class="weui-cell__bd">
+									<input class="weui-input" type="date" v-model="a.bookingTime">
+								</div>
 							</div>
-						</div>
+
+							<div class="weui-cell">
+								<div class="weui-cell__hd">预离时间</div>
+								<div class="weui-cell__bd">
+									<input class="weui-input" type="date" v-model="a.leaveTime">
+								</div>
+							</div>
+
+						</template>
+
 
 						<div class="weui-cells weui-cells_form">
 							<div class="weui-cell">
@@ -137,7 +171,7 @@
 
 									<img :src="`${a.liveImgCode}`" width="100" height="100" style="float:left" v-if="a.liveImgCode != ''">
 
-									<div class="img-placeholder" style="float:left">真人或照片</div>
+									<div class="img-placeholder" style="float:left">真实照片</div>
 
 								</div>
 							</div>
@@ -150,7 +184,7 @@
 				<a :class="`weui-btn weui-btn_${
 				a.realName != '' &&
 				a.identityCard != '' &&
-				a.visitTime != '' &&
+				(a.visitTime != '' || a.bookingTime != '') &&
 				a.liveImg != '' ?
 				'primary':'disabled'}`"
 				id="提交按钮"
@@ -197,25 +231,57 @@
 					<div class="weui-cell__bd">{{a.identityCard}}</div>
 				</div>
 
-				<div class="weui-cell">
-					<div class="weui-cell__hd">预约时间</div>
-					<div class="weui-cell__bd">{{a.visitTime}}</div>
-				</div>
+							<template v-if="examine == 1">
 
-				<div class="weui-cell">
-					<div class="weui-cell__hd">拜访部门</div>
-					<div class="weui-cell__bd">{{a.departTitle}}</div>
-				</div>
+								<div class="weui-cell" v-if="softwareVersion == 60001">
+									<div class="weui-cell__hd">拜访部门</div>
+									<div class="weui-cell__bd">
+										{{a.departTitle}}
+									</div>
+								</div>
 
-				<div class="weui-cell">
-					<div class="weui-cell__hd">拜访人员</div>
-					<div class="weui-cell__bd">{{a.beVisited}}</div>
-				</div>
+								<div class="weui-cell" v-if="softwareVersion == 60002">
+									<div class="weui-cell__hd">拜访房间</div>
+									<div class="weui-cell__bd">
+										{{a.roomName}}
+									</div>
+								</div>
 
-				<div class="weui-cell">
-					<div class="weui-cell__hd">拜访原因</div>
-					<div class="weui-cell__bd">{{a.cause}}</div>
-				</div>
+								<div class="weui-cell">
+									<div class="weui-cell__hd">拜访人员</div>
+									<div class="weui-cell__bd">
+										{{a.beVisited}}
+									</div>
+								</div>
+
+								<div class="weui-cell">
+									<div class="weui-cell__hd">拜访原因</div>
+									<div class="weui-cell__bd">
+										{{a.cause}}
+									</div>
+								</div>
+
+							</template>
+
+						</template>
+
+						<template v-if="a.action == 3">
+
+							<div class="weui-cell">
+								<div class="weui-cell__hd">入住时间</div>
+								<div class="weui-cell__bd">
+									{{a.bookingTime}}
+								</div>
+							</div>
+
+							<div class="weui-cell">
+								<div class="weui-cell__hd">预离时间</div>
+								<div class="weui-cell__bd">
+									{{a.leaveTime}}
+								</div>
+							</div>
+
+						</template>
 
 			</div>
 		</div>
@@ -435,6 +501,51 @@ var app = new Vue({
 
 			this.loading = 1
 
+			var 接口地址 = '', post = {}
+			if(this.a.action == 1){
+
+				接口地址 = 'h5FaceRecognition'
+				post = {
+					action: this.a.action,
+					identifier: LS.identifier,
+					realName: this.a.realName,
+					identityCard: this.a.identityCard,
+					liveImg: this.a.liveImg,
+					deviceSn: LS.deviceSn,
+					mobile: this.a.mobile,
+					visitTime: this.a.visitTime,
+				}
+
+				if(this.examine == 1){
+
+					post.beVisited = this.a.beVisited
+					post.cause = this.a.cause
+
+					if(this.softwareVersion == 60001){
+						post.departTitle = this.a.departTitle
+					}
+					if(this.softwareVersion == 60002){
+						post.roomName = this.a.roomName
+					}
+				}
+			}
+
+			if(this.a.action == 3){
+
+				接口地址 = 'h5GuestFaceRecognition'
+				post = {
+					action: this.a.action,
+					identifier: LS.identifier,
+					realName: this.a.realName,
+					identityCard: this.a.identityCard,
+					liveImg: this.a.liveImg,
+					deviceSn: LS.deviceSn,
+					mobile: this.a.mobile,
+					bookingTime: this.a.bookingTime,
+					roomName: this.a.roomName,
+				}
+			}
+
 			var data = {
 	"reqHead":{
 		"clientType":"1",
@@ -450,24 +561,12 @@ var app = new Vue({
 		"version":"1.0",
 		"sign":"AF589D24291C386A925DF1430AFB38B7"
 	},
-	"reqBody":{
-		action: this.a.action,
-		identifier: LS.identifier,
-		realName: this.a.realName,
-		mobile: this.a.mobile,
-		identityCard: this.a.identityCard,
-		liveImg: this.a.liveImg,
-		deviceSn: LS.deviceSn,
-		visitTime: this.a.visitTime,
-		beVisited: this.a.beVisited,
-		departTitle: this.a.departTitle,
-		cause: this.a.cause,
-	}
+	"reqBody": post
 }
 
 			$.ajax({
 				type: 'POST',
-				url: api + 'zzb/visitor/h5FaceRecognition/interface',
+				url: api + 'zzb/visitor/' + 接口地址 + '/interface',
 				data: JSON.stringify(data),
 				dataType: 'json',
 				success: function(re){
