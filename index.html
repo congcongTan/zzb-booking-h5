@@ -19,7 +19,7 @@
 	width: auto;
 }
 .img-placeholder{
-	margin-left: 25px;
+	margin: 40px 0 0 35px;
 	color: #ccc;
 }
 </style>
@@ -42,176 +42,163 @@
 	</div> -->
 
 
-	<div v-if="page == 0">
-		loading ...
-	</div>
+	<img src="img/bg.jpg" width="100%">
 
+	<div style="margin: 0 25px;">
 
-	<div v-if="page == 1">
+	<template v-if="page == 1">
 
-		<img src="img/bg.jpg" width="100%">
+<!-- 			<div style="padding-left: 60px">
+			<ul>
+				<li>本系统需要实名认证，请确认录入信息无误</li>
+				<li>预约成功后，请到商户前台处理后续业务</li>
+			</ul>
+		</div> -->
 
-		<form style="margin-top: -25px">
+		<div class="weui-cells__group weui-cells__group_form">
+			<div class="weui-cells" style="border-radius: 12px;">
 
-			<div style="padding-left: 60px">
-				<ul>
-					<li>本系统需要实名认证，请确认录入信息无误</li>
-					<li>预约成功后，请到商户前台处理后续业务</li>
-				</ul>
-			</div>
-			<div class="weui-form__control-area">
-				<div class="weui-cells__group weui-cells__group_form">
-					<div class="weui-cells weui-cells_form">
+				<div class="weui-cell">
+					<div class="weui-cell__hd">预约类型</div>
+					<div class="weui-cell__bd">
 
-						<div class="weui-cell">
-							<div class="weui-cell__hd">预约类型</div>
-							<div class="weui-cell__bd">
+						<label><input type="radio" name="预约类型" value="1" v-model="a.action"> 访客拜访</label>
 
-								<label><input type="radio" name="预约类型" value="1" v-model="a.action"> 访客拜访</label>
-
-								<label v-if="softwareVersion != 60001"><input type="radio" name="预约类型" value="3" v-model="a.action"> 我要入住</label>
-
-							</div>
-						</div>
-
-						<div class="weui-cell">
-							<div class="weui-cell__hd">真实姓名</div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" type="text" placeholder="请输入真实姓名"
-								v-model="a.realName">
-							</div>
-						</div>
-
-						<div class="weui-cell">
-							<div class="weui-cell__hd">手机号码</div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" type="number" v-model="a.mobile">
-							</div>
-						</div>
-
-						<div class="weui-cell">
-							<div class="weui-cell__hd">身份证号</div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" type="text" placeholder="请输入18位证件号码"
-								v-model="a.identityCard">
-							</div>
-						</div>
-
-						<template v-if="a.action == 1">
-
-							<div class="weui-cell">
-								<div class="weui-cell__hd">预约时间</div>
-								<div class="weui-cell__bd">
-									<input class="weui-input" type="date" v-model="a.visitTime">
-								</div>
-							</div>
-
-							<template v-if="examine == 1">
-
-								<div class="weui-cell" v-if="softwareVersion == 60001">
-									<div class="weui-cell__hd">拜访部门</div>
-									<div class="weui-cell__bd">
-										<input class="weui-input" type="text" v-model="a.departTitle">
-									</div>
-								</div>
-
-								<div class="weui-cell" v-if="softwareVersion == 60002">
-									<div class="weui-cell__hd">拜访房间</div>
-									<div class="weui-cell__bd">
-										<input class="weui-input" type="text" v-model="a.roomName">
-									</div>
-								</div>
-
-								<div class="weui-cell">
-									<div class="weui-cell__hd">拜访人员</div>
-									<div class="weui-cell__bd">
-										<input class="weui-input" type="text" v-model="a.beVisited">
-									</div>
-								</div>
-
-								<div class="weui-cell">
-									<div class="weui-cell__hd">拜访原因</div>
-									<div class="weui-cell__bd">
-										<input class="weui-input" type="text" v-model="a.cause">
-									</div>
-								</div>
-
-							</template>
-
-						</template>
-
-						<template v-if="a.action == 3">
-
-							<div class="weui-cell">
-								<div class="weui-cell__hd">入住时间</div>
-								<div class="weui-cell__bd">
-									<input class="weui-input" type="date" v-model="a.bookingTime">
-								</div>
-							</div>
-
-							<div class="weui-cell">
-								<div class="weui-cell__hd">预离时间</div>
-								<div class="weui-cell__bd">
-									<input class="weui-input" type="date" v-model="a.leaveTime">
-								</div>
-							</div>
-
-						</template>
-
-
-						<div class="weui-cells weui-cells_form">
-							<div class="weui-cell">
-								<div class="weui-cell__bd">
-
-									<label v-if="a.liveImgCode == ''">
-										<img src="img/input-upload.gif" width="100" height="100" style="float:left">
-										<input type="file" style="display:none" accept="image/*"
-										id="upload_input" @change="选图()">
-									</label>
-
-									<img :src="`${a.liveImgCode}`" width="100" height="100" style="float:left" v-if="a.liveImgCode != ''">
-
-									<div class="img-placeholder" style="float:left">真实照片</div>
-
-								</div>
-							</div>
-						</div>
+						<label v-if="softwareVersion != 60001"><input type="radio" name="预约类型" value="3" v-model="a.action"> 我要入住</label>
 
 					</div>
 				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">真实姓名</div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="text" placeholder="请输入真实姓名"
+						v-model="a.realName">
+					</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">手机号码</div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="number" v-model="a.mobile">
+					</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">身份证号</div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="text" placeholder="请输入18位证件号码"
+						v-model="a.identityCard">
+					</div>
+				</div>
+
+				<template v-if="a.action == 1">
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">预约时间</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="date" v-model="a.visitTime">
+						</div>
+					</div>
+
+					<template v-if="examine == 1">
+
+						<div class="weui-cell" v-if="softwareVersion == 60001">
+							<div class="weui-cell__hd">拜访部门</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" v-model="a.departTitle">
+							</div>
+						</div>
+
+						<div class="weui-cell" v-if="softwareVersion == 60002">
+							<div class="weui-cell__hd">拜访房间</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" v-model="a.roomName">
+							</div>
+						</div>
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">拜访人员</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" v-model="a.beVisited">
+							</div>
+						</div>
+
+						<div class="weui-cell">
+							<div class="weui-cell__hd">拜访原因</div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" type="text" v-model="a.cause">
+							</div>
+						</div>
+
+					</template>
+
+				</template>
+
+				<template v-if="a.action == 3">
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">入住时间</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="date" v-model="a.bookingTime">
+						</div>
+					</div>
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">预离时间</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="date" v-model="a.leaveTime">
+						</div>
+					</div>
+
+				</template>
+
+
+				<div class="weui-cells weui-cells_form">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+
+							<label>
+								<img src="img/face.png" width="100" height="100" style="float:left" v-if="a.liveImgCode == ''">
+								<img :src="`${a.liveImgCode}`" width="100" height="100" style="float:left" v-if="a.liveImgCode != ''">
+								<input type="file" style="display:none" accept="image/*"
+								id="upload_input" @change="选图()">
+							</label>
+
+							
+
+							<div class="img-placeholder" style="float:left">请上传您的头像</div>
+
+						</div>
+					</div>
+				</div>
+
 			</div>
-			<div class="weui-form__opr-area">
-				<a :class="`weui-btn weui-btn_${
-				a.realName != '' &&
-				a.identityCard != '' && (
-					(a.action == 1 && a.visitTime != '') ||
-					(a.action == 3 && a.bookingTime != '' && a.leaveTime != '' )
-				) &&
-				a.liveImg != '' ?
-				'primary':'disabled'}`"
-				id="提交按钮"
-				@click="提交()"
-				>核验并预约</a>
-			</div>
-
-			<input type="hidden" name="liveImg" v-model="a.liveImg">
-		</form>
-
-	</div>
-
-
-	<div v-if="page == 2">
-
-		<div class="weui-msg">
-			<div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
-			<div class="weui-msg__text-area">
-				<h2 class="weui-msg__title">预约成功</h2>
-			</div>
-
 		</div>
 
+		<div class="weui-form__opr-area" style="margin-top:20px;">
+			<a :class="`weui-btn weui-btn_${
+			a.realName != '' &&
+			a.identityCard != '' && (
+				(a.action == 1 && a.visitTime != '') ||
+				(a.action == 3 && a.bookingTime != '' && a.leaveTime != '' )
+			) &&
+			a.liveImg != '' ?
+			'primary':'disabled'}`"
+			id="提交按钮"
+			@click="提交()"
+			>核验并预约</a>
+		</div>
+
+		<input type="hidden" name="liveImg" v-model="a.liveImg">
+
+	</template>
+
+
+	<template v-if="page == 2">
+
 		<div class="weui-cells__group weui-cells__group_form">
-			<div class="weui-cells weui-cells_form">
+			<div class="weui-cells weui-cells_form" style="border-radius: 12px;">
 
 				<div class="weui-cell">
 					<div class="weui-cell__hd">预约类型</div>
@@ -297,22 +284,21 @@
 			</div>
 		</div>
 
-		<br><br><br>
-
-		<div class="weui-msg__opr-area">
+		<div class="weui-msg__opr-area" style="margin-top:20px;">
 			<p class="weui-btn-area">
 				<a class="weui-btn weui-btn_primary" @click="wx_close()">关闭页面</a>
 			</p>
 		</div>
 
+	</template>
+
 		<div class="weui-form__extra-area">
 			<div class="weui-footer">
-				<p class="weui-footer__text">中证宝提供技术支持</p>
+				<p style="color: #FFF">由”互联网+“可信任身份认证平台提供支持</p>
 			</div>
 		</div>
 
 	</div>
-
 
 
 	<div v-if="loading == 1">
