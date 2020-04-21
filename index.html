@@ -88,7 +88,7 @@
 					<div class="weui-cell__hd">身份证号</div>
 					<div class="weui-cell__bd">
 						<input class="weui-input" type="text" placeholder="请输入18位证件号码"
-						v-model="a.identityCard">
+						id="身份证输入框">
 					</div>
 				</div>
 
@@ -217,7 +217,7 @@
 
 				<div class="weui-cell">
 					<div class="weui-cell__hd">身份证号</div>
-					<div class="weui-cell__bd">{{a.identityCard}}</div>
+					<div class="weui-cell__bd">{{身份证}}</div>
 				</div>
 
 				<template v-if="a.action == 1">
@@ -354,12 +354,13 @@ var app = new Vue({
 		a: {
 			action: 1,
 			realName: '',
-			identityCard: '',
 			visitTime: '',
 			leaveTime: '',
 			liveImg: '',
 			liveImgCode: '',//仅预览用
 		},
+
+		身份证: '',
 
 		examine: 0,
 		softwareVersion: 0,
@@ -386,6 +387,10 @@ var app = new Vue({
 		debug: function(log){
 
 			$('.debug').html( $('.debug').html() + log + '<br>' )
+		},
+
+		身份证输入: function(){
+
 		},
 
 		选图: function(){
@@ -506,7 +511,7 @@ var app = new Vue({
 					action: this.a.action,
 					identifier: LS.identifier,
 					realName: this.a.realName,
-					identityCard: this.a.identityCard,
+					identityCard: $('#身份证输入框').val().split(" ").join(""),
 					liveImg: this.a.liveImg,
 					deviceSn: LS.deviceSn,
 					mobile: this.a.mobile,
@@ -534,7 +539,7 @@ var app = new Vue({
 					action: this.a.action,
 					identifier: LS.identifier,
 					realName: this.a.realName,
-					identityCard: this.a.identityCard,
+					identityCard: $('#身份证输入框').val().split(" ").join(""),
 					liveImg: this.a.liveImg,
 					deviceSn: LS.deviceSn,
 					mobile: this.a.mobile,
@@ -651,6 +656,29 @@ var app = new Vue({
 			this.toast({message:'缺少hsdevice',close:'wx'})
 			return
 		}
+
+		setTimeout(function(){
+			$("#身份证输入框").keyup(function(obj){
+
+				// Backspace不执行函数
+				if(obj.keyCode == 8){return}
+
+				var code = $('#身份证输入框').val()
+
+				code = code.split(" ").join("")
+
+				if(code.length >= 6){
+					code = code.slice(0, 6) + ' ' + code.slice(6)
+				}
+				if(code.length >= 15){
+					code = code.slice(0, 15) + ' ' + code.slice(15)
+				}
+				// console.log(code)
+
+				_this.身份证 = code
+				$('#身份证输入框').val(code)
+			})
+		}, 300)
 
 
 		// 商户信息
