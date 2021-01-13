@@ -457,28 +457,42 @@ var app = new Vue({
 				ctx.clearRect(0, 0, canvas.width, canvas.height)
 
 				// 摆正
-				switch(Orientation){
-					case 6:// 旋转90度
-						canvas.width = image.height
-						canvas.height = image.width
-						ctx.rotate(Math.PI / 2)
-						ctx.drawImage(image, 0, -image.height, image.width, image.height)
-						break
-					case 3:// 旋转180度
-						ctx.rotate(Math.PI)
-						ctx.drawImage(image, -image.width, -image.height, image.width, image.height)
-						break
-					case 8:// 旋转-90度
-						canvas.width = image.height
-						canvas.height = image.width
-						ctx.rotate(3 * Math.PI / 2)
-						ctx.drawImage(image, -image.width, 0, image.width, image.height)
-						break
-					
-					default:
-						ctx.drawImage(image, 0, 0, image.width, image.height)
-						break
+				var ios = 0
+				if(navigator.userAgent.indexOf('iPhone OS') != -1){
+					var tmp = navigator.userAgent.indexOf('iPhone OS')
+					ios = Number( navigator.userAgent.substr(tmp + 10, 2) )
+					// alert(ios)
 				}
+
+
+				if(ios >= 13){
+					ctx.drawImage(image, 0, 0, image.width, image.height)
+				}
+				else{
+					switch(Orientation){
+						case 6:// 旋转90度
+							canvas.width = image.height
+							canvas.height = image.width
+							ctx.rotate(Math.PI / 2)
+							ctx.drawImage(image, 0, -image.height, image.width, image.height)
+							break
+						case 3:// 旋转180度
+							ctx.rotate(Math.PI)
+							ctx.drawImage(image, -image.width, -image.height, image.width, image.height)
+							break
+						case 8:// 旋转-90度
+							canvas.width = image.height
+							canvas.height = image.width
+							ctx.rotate(3 * Math.PI / 2)
+							ctx.drawImage(image, -image.width, 0, image.width, image.height)
+							break
+						
+						default:
+							ctx.drawImage(image, 0, 0, image.width, image.height)
+							break
+					}
+				}
+
 
 				//生成base64码
 				var base64Code = canvas.toDataURL("image/jpeg")
