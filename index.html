@@ -58,13 +58,13 @@
 		<div class="weui-cells__group weui-cells__group_form">
 			<div class="weui-cells" style="border-radius: 12px;">
 
-				<div class="weui-cell">
+				<div class="weui-cell" v-if="softwareVersion == 60001 || softwareVersion == 60002">
 					<div class="weui-cell__hd">预约类型</div>
 					<div class="weui-cell__bd">
 
 						<label><input type="radio" name="预约类型" value="1" v-model="a.action"> 访客拜访</label>
 
-						<label v-if="softwareVersion != 60001"><input type="radio" name="预约类型" value="3" v-model="a.action"> 我要入住</label>
+						<label v-if="softwareVersion == 60002"><input type="radio" name="预约类型" value="3" v-model="a.action"> 我要入住</label>
 
 					</div>
 				</div>
@@ -78,13 +78,6 @@
 				</div>
 
 				<div class="weui-cell">
-					<div class="weui-cell__hd">手机号码</div>
-					<div class="weui-cell__bd">
-						<input class="weui-input" type="number" v-model="a.mobile">
-					</div>
-				</div>
-
-				<div class="weui-cell">
 					<div class="weui-cell__hd">身份证号</div>
 					<div class="weui-cell__bd">
 						<input class="weui-input" type="text" placeholder="请输入18位证件号码"
@@ -92,7 +85,60 @@
 					</div>
 				</div>
 
-				<template v-if="a.action == 1">
+				<div class="weui-cell">
+					<div class="weui-cell__hd">手机号码</div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="number" v-model="a.mobile">
+					</div>
+				</div>
+
+				<template v-if="softwareVersion == 60003">
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">预约日期</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="date" v-model="a.visitTime">
+						</div>
+					</div>
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">被访人员</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="text" v-model="a.empName">
+						</div>
+					</div>
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">被访人手机</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="text" v-model="a.empMobile">
+						</div>
+					</div>
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">拜访原因</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="text" v-model="a.visitReason">
+						</div>
+					</div>
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">访客公司名称</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="text" v-model="a.visitOrgName">
+						</div>
+					</div>
+
+					<div class="weui-cell">
+						<div class="weui-cell__hd">车牌号</div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" type="text" v-model="a.licensePlate">
+						</div>
+					</div>
+
+				</template>
+
+				<template v-if="softwareVersion != 60003 && a.action == 1">
 
 					<div class="weui-cell">
 						<div class="weui-cell__hd">预约时间</div>
@@ -135,7 +181,7 @@
 
 				</template>
 
-				<template v-if="a.action == 3">
+				<template v-if="softwareVersion != 60003 && a.action == 3">
 
 					<div class="weui-cell">
 						<div class="weui-cell__hd">入住时间</div>
@@ -167,7 +213,7 @@
 
 							
 
-							<div class="img-placeholder" style="float:left">请上传您的头像</div>
+							<div class="img-placeholder" style="float:left">拍照上传</div>
 
 						</div>
 					</div>
@@ -291,6 +337,63 @@
 		</div>
 
 	</template>
+
+
+	<template v-if="page == 3">
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd">真实姓名</div>
+			<div class="weui-cell__bd">{{a.realName}}</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd">身份证号</div>
+			<div class="weui-cell__bd">{{身份证}}</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd">手机号码</div>
+			<div class="weui-cell__bd">{{a.mobile}}</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd">预约日期</div>
+			<div class="weui-cell__bd">
+				{{a.visitTime}}
+			</div>
+		</div>
+
+		<br>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd">被访人员</div>
+			<div class="weui-cell__bd">
+				{{a.empName}}
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd">被访人员手机</div>
+			<div class="weui-cell__bd">
+				{{a.empMobile}}
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd">拜访原因</div>
+			<div class="weui-cell__bd">
+				{{a.visitReason}}
+			</div>
+		</div>
+
+		<div class="weui-msg__opr-area" style="margin-top:20px;">
+			<p class="weui-btn-area">
+				<a class="weui-btn weui-btn_primary" @click="wx_close()">关闭页面</a>
+			</p>
+		</div>
+
+	</template>
+
 
 		<div class="weui-form__extra-area">
 			<div class="weui-footer">
@@ -518,7 +621,28 @@ var app = new Vue({
 			this.loading = 1
 
 			var 接口地址 = '', post = {}
-			if(this.a.action == 1){
+
+			if(this.softwareVersion == 60003){
+
+				接口地址 = 'h5VisitorAppointment'
+				post = {
+					identifier: LS.identifier,
+					realName: this.a.realName,
+					identityCard: $('#身份证输入框').val().split(" ").join(""),
+					liveImg: this.a.liveImg,
+					deviceSn: LS.deviceSn,
+					mobile: this.a.mobile,
+					visitTime: this.a.visitTime,
+					visitOrgName: this.a.visitOrgName,
+					empName: this.a.empName,
+					empMobile: this.a.empMobile,
+					visitReason: this.a.visitReason,
+					licensePlate: this.a.licensePlate,
+				}
+
+			}
+
+			else if(this.a.action == 1){
 
 				接口地址 = 'h5FaceRecognition'
 				post = {
@@ -546,7 +670,7 @@ var app = new Vue({
 				}
 			}
 
-			if(this.a.action == 3){
+			else if(this.a.action == 3){
 
 				接口地址 = 'h5GuestFaceRecognition'
 				post = {
@@ -592,7 +716,12 @@ var app = new Vue({
 
 					if(re.rspHead.retCode == '1'){
 
-						_this.page = 2
+						if(softwareVersion == 60003){
+							_this.page = 3
+						}else{
+							_this.page = 2
+						}
+						
 
 					}else{
 
